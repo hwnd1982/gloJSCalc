@@ -24,4 +24,5 @@ console.log(`Цель заработать ${mission} рубл${mission % 10 ===
 addExpenses = addExpenses.toLocaleLowerCase();
  console.log('Список дополнительных рассходов (addExpenses):\n\t', addExpenses.split(', '));
 
-
+let budgetDay = money / 30;
+console.log('Дневной бюджет: ', budgetDay);
