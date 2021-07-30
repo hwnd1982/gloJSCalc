@@ -1,9 +1,10 @@
-let money = 150000, 
+const money = 150000, 
   income = 'рента', 
   addExpenses = 'Образование, Автомобиль, Дети, Отдых', 
   deposit = true, 
-  mission = 500000, 
-  period = 3;
+  mission = 500021, 
+  period = 21;
+let budgetDay = money / 30;
 
 console.log('Переменная (money):\n\tтип данных:', 
   typeof money, '\n\tзначение:', money,
@@ -14,15 +15,14 @@ console.log('Переменная (money):\n\tтип данных:',
 
 console.log('Длина строки (addExpenses):', addExpenses.length);
 
-console.log(`Период равен ${period} месяц${period === 1 ?
-   '' : period !== 0 && period < 5 ? 'а' : 'ев'}`);
+console.log(`Период равен ${period} месяц${period % 10 === 1 ?
+   '' : period % 10 !== 0 && period % 10 < 5 ? 'а' : 'ев'}`);
 
 console.log(`Цель заработать ${mission} рубл${mission % 10 === 1 ?
    'ь' : mission % 10 !== 0 && mission % 10 < 5 ?
     'я' : 'ей'}`);
 
-addExpenses = addExpenses.toLocaleLowerCase();
- console.log('Список дополнительных рассходов (addExpenses):\n\t', addExpenses.split(', '));
-
-let budgetDay = money / 30;
+ console.log('Список дополнительных рассходов (addExpenses):\n\t', 
+  addExpenses.toLocaleLowerCase().split(', '));
+  
 console.log('Дневной бюджет: ', budgetDay);
