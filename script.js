@@ -40,7 +40,17 @@ const money = +prompt('Ваш месячный доход?'),
   getTargetMonth = (means, target) => {
     return Math.ceil(target / means);
   },
-  period = getTargetMonth(accumulatedMonth, mission);
+  period = getTargetMonth(accumulatedMonth, mission),
+  getDeclensionOfStringByNumber = (num, expressions) => { 
+    switch (true) {
+      case +((num += '').substr(-2)) > 10  &&  
+        +((num += '').substr(-2)) <= 20 : 
+          return num  + ' ' + expressions[2];
+      case num % 10 === 1: return num  + ' ' + expressions[0];
+      case num % 10 < 5: return num  + ' ' + expressions[1];
+      default: return num  + ' ' + expressions[2];
+    }
+  };
 
 showTypeOf(money);
 showTypeOf(income);
@@ -53,9 +63,9 @@ console.log(`Список дополнительных рассходов (addEx
   'список пуст...' : 
   addExpenses.toLocaleLowerCase().split(',')}`);
 
-console.log(`${period > 0 &&  period !== Infinity ? `Удастся накопить за: ${period} месяц${period % 10 === 1 ?
-  '' : period % 10 !== 0 && period % 10 < 5 ? 'а' : 'ев'}` : 
-'К сожалению, с текущим уровнем доходов данная цель не достижима!'}`);
+console.log( `${period > 0 &&  period !== Infinity ?
+  `Удастся накопить за: ${getDeclensionOfStringByNumber(period, ['месяц', 'месяца', 'месяцев'])}` :
+  'К сожалению, с текущим уровнем доходов данная цель не достижима!'}`);
 
-console.log(`Дневной бюджет: ${budgetDay}`);
+console.log(`Дневной бюджет: ${getDeclensionOfStringByNumber(budgetDay, ['рубль', 'рубля', 'рублей'])}`);
 console.log(getStatusIncome(budgetDay));
