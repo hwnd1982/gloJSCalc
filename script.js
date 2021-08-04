@@ -9,10 +9,11 @@ const money = +prompt('Ваш месячный доход?'),
   amount1 = +prompt('Во сколько это обойдется?'),
   expenses2 = prompt('Введите обязательную статью расходов:'),
   amount2 = +prompt('Во сколько это обойдется?'),
-  showTypeOf = (data) => {
-    console.log(`тип данных: ${typeof data};\nзначение: ${data || 'Данные введены некорректно!'};`);
+  showTypeOf = function(data) {
+    console.log(`тип данных: ${typeof data};
+значение: ${data || 'Данные введены некорректно!'};`);
   },
-  getStatusIncome = (budgetDay) => {
+  getStatusIncome = function(budgetDay) {
     if (budgetDay > 1200) {
       return('У вас высокий уровень дохода');
     } else {
@@ -27,25 +28,26 @@ const money = +prompt('Ваш месячный доход?'),
       }
     }
   },
-  getExpensesMonth = (...theArgs) => {
-    return theArgs.reduce((summ, arg) => {
+  getExpensesMonth = function(...theArgs) {
+    return theArgs.reduce(function(summ, arg) {
       return summ + (arg && typeof arg === 'number' ? arg : 0);
     });
   },
-  getAccumulatedMonth = (incomes, expenses) => {
+  getAccumulatedMonth = function(incomes, expenses) {
     return incomes - expenses;
   },
   accumulatedMonth = getAccumulatedMonth(money, getExpensesMonth(amount1, amount2)),
   budgetDay = Math.floor(accumulatedMonth / 30, 0),
-  getTargetMonth = (means, target) => {
+  getTargetMonth = function(means, target) {
     return Math.ceil(target / means);
   },
   period = getTargetMonth(accumulatedMonth, mission),
-  getDeclensionOfStringByNumber = (num, expressions) => { 
+  getDeclensionOfStringByNumber = function(num, expressions) { 
     switch (true) {
       case +((num += '').substr(-2)) > 10  &&  
         +((num += '').substr(-2)) <= 20 : 
           return num  + ' ' + expressions[2];
+      case num % 10 === 0: return num  + ' ' + expressions[2];
       case num % 10 === 1: return num  + ' ' + expressions[0];
       case num % 10 < 5: return num  + ' ' + expressions[1];
       default: return num  + ' ' + expressions[2];
