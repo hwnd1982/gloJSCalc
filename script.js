@@ -28,8 +28,8 @@ const money = +prompt('Ваш месячный доход?'),
     }
   },
   getExpensesMonth = (...theArgs) => {
-    return theArgs.reduce((previous, current) => {
-      return previous + (current && typeof current === 'number' ? current : 0);
+    return theArgs.reduce((summ, arg) => {
+      return summ + (arg && typeof arg === 'number' ? arg : 0);
     });
   },
   getAccumulatedMonth = (incomes, expenses) => {
