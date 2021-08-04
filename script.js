@@ -10,8 +10,7 @@ const money = +prompt('Ваш месячный доход?'),
   expenses2 = prompt('Введите обязательную статью расходов:'),
   amount2 = +prompt('Во сколько это обойдется?'),
   showTypeOf = function(data) {
-    console.log(`тип данных: ${typeof data};
-значение: ${data || 'Данные введены некорректно!'};`);
+    console.log(`тип данных: ${typeof data};\nзначение: ${data || 'Данные введены некорректно!'};`);
   },
   getStatusIncome = function(budgetDay) {
     if (budgetDay > 1200) {
