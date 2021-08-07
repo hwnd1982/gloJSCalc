@@ -1,27 +1,39 @@
 'use strict';
 
-let expenses = [];
+// 1. Объявление переменный
 
+// Константы
+const 
+  income = 'Рента', 
+  mission = 500021;
+
+// Переменные
+let money,
+  addExpenses,
+  deposit,
+  expenses = [],
+  expensesAmount,
+  accumulatedMonth,
+  period,
+  budgetDay;
+
+// Функции
 const
+// Проверка являются ли полученные данные числом
   isNumber = function(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
-  },   
+  },
+// Запрашивает уровень дохода у пользователя и сохраняет в переменную money
   start = function() {
-    let money;
-
     do {
       money = prompt('Ваш месячный доход?');
     } while (!isNumber(money));
-    return money;
   },
-  money = start(),
-  income = 'Рента', 
-  addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую:') || '',
-  deposit = confirm('Есть ли у вас депозит в банке?'), 
-  mission = 500021, 
+// Выводит значение и тип данных
   showTypeOf = function(data) {
     console.log(`тип данных: ${typeof data};\nзначение: ${data || 'Данные введены некорректно!'};`);
   },
+// В зависимости от значения уровень доходов
   getStatusIncome = function(budgetDay) {
     if (budgetDay > 1200) {
       return('У вас высокий уровень дохода');
@@ -37,10 +49,12 @@ const
       }
     }
   },
-  getExpensesMonth = function() {
+// Запрашивает у пользователя статьи расходов и суммы, 
+// назвение сохраняте в expenses, возвращует общую сумму расзодов
+  getExpensesMonth = function(count = 2) {
     let summ = 0;
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < count; i++) {
       expenses[i] = prompt('Введите обязательную статью расходов:');
       let amount;
       do {
@@ -50,16 +64,16 @@ const
     }
     return summ;
   },
-  expensesAmount = getExpensesMonth(),
+// Возвращает остаток свободных средств в месяц
   getAccumulatedMonth = function(incomes, expenses) {
     return incomes - expenses;
   },
-  accumulatedMonth = getAccumulatedMonth(money, expensesAmount),
-  budgetDay = Math.floor(accumulatedMonth / 30, 0),
+// Возвращает за сколько месяцев будет достигнута цель
   getTargetMonth = function(means, target) {
     return Math.ceil(target / means);
   },
-  period = getTargetMonth(accumulatedMonth, mission),
+// Возращает строку для вывода "значение + единицы измерения"
+// В зависимости от значение выбирается нужное склонение единиц измерения
   getDeclensionOfStringByNumber = function(num, expressions) { 
     switch (true) {
       case +((num += '').substr(-2)) > 10  &&  
@@ -72,20 +86,27 @@ const
     }
   };
 
+// 2. Присвоение значений переменным
+start();
+addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую:') || '';
+deposit = confirm('Есть ли у вас депозит в банке?');
+expensesAmount = getExpensesMonth();
+accumulatedMonth = getAccumulatedMonth(money, expensesAmount);
+period = getTargetMonth(accumulatedMonth, mission);
+budgetDay = Math.floor(accumulatedMonth / 30, 0);
+
+// 3. Вывод даенных
 showTypeOf(money);
 showTypeOf(income);
 showTypeOf(deposit);
-
 console.log(`Расходы за месяц: ${expensesAmount}`);
 console.log(`Список дополнительных рассходов (addExpenses): 
   ${addExpenses.toLocaleLowerCase().split(',').length === 1 && 
   !addExpenses.toLocaleLowerCase().split(',')[0] ? 
   'список пуст...' : 
   addExpenses.toLocaleLowerCase().split(',')}`);
-
 console.log( `${period > 0 &&  period !== Infinity ?
   `Цель будет достигнута за: ${getDeclensionOfStringByNumber(period, ['месяц', 'месяца', 'месяцев'])}` :
   'Цель не будет достигнута!'}`);
-
 console.log(`Дневной бюджет: ${getDeclensionOfStringByNumber(budgetDay, ['рубль', 'рубля', 'рублей'])}`);
 console.log(getStatusIncome(budgetDay));
