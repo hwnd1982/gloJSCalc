@@ -1,9 +1,23 @@
 'use strict';
 
-let money,
+let money;
 // Проверка являются ли полученные данные числом
+const
   isNumber = function(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
+  },
+// Возращает строку для вывода "значение + единицы измерения"
+// В зависимости от значение выбирается нужное склонение единиц измерения
+  getDeclensionOfStringByNumber = function(num, expressions) { 
+    switch (true) {
+      case +((num += '').substr(-2)) > 10  &&  
+        +((num += '').substr(-2)) <= 20 : 
+          return num  + ' ' + expressions[2];
+      case num % 10 === 0: return num  + ' ' + expressions[2];
+      case num % 10 === 1: return num  + ' ' + expressions[0];
+      case num % 10 < 5: return num  + ' ' + expressions[1];
+      default: return num  + ' ' + expressions[2];
+    }
   },
 // Запрашивает уровень дохода у пользователя и сохраняет в переменную money
   start = function() {
@@ -48,11 +62,9 @@ let money,
       appData.getTargetMonth();
     },
     getExpensesMonth: function() {
-      let summ = 0;
       for (let key in appData.expenses) {
-        summ += +appData.expenses[key];
+        appData.expensesMonth += +appData.expenses[key];
       }
-      appData.expensesMonth = summ;
     },
     getBudget: function() {
       appData.budgetMonth = appData.budget - appData.expensesMonth;
@@ -62,18 +74,15 @@ let money,
       appData.period = Math.ceil(appData.mission / appData.budgetMonth);
     },
     getStatusIncome: function() {
-      if (appData.budgetDay > 1200) {
-        return('У вас высокий уровень дохода');
-      } else {
-        if (appData.budgetDay <= 1200 && appData.budgetDay >= 600) {
+      switch (true) {
+        case appData.budgetDay > 1200:
+          return('У вас высокий уровень дохода');
+        case appData.budgetDay <= 1200 && appData.budgetDay >= 600:
           return('У вас средний уровень дохода');
-        } else {
-          if (appData.budgetDay < 600 &&  appData.budgetDay > 0){
-            return('К сожалению у вас уровень дохода ниже среднего');
-          } else {
-            return('Что то пошло не так');
-          }
-        }
+        case appData.budgetDay < 600 &&  appData.budgetDay > 0:
+          return('К сожалению, ваш уровень дохода ниже среднего');
+        default:
+          return('Что то пошло не так');
       }
     }
   };
@@ -81,28 +90,11 @@ let money,
 start();
 appData.asking();
 
-const
-// Возращает строку для вывода "значение + единицы измерения"
-// В зависимости от значение выбирается нужное склонение единиц измерения
-  getDeclensionOfStringByNumber = function(num, expressions) { 
-    switch (true) {
-      case +((num += '').substr(-2)) > 10  &&  
-        +((num += '').substr(-2)) <= 20 : 
-          return num  + ' ' + expressions[2];
-      case num % 10 === 0: return num  + ' ' + expressions[2];
-      case num % 10 === 1: return num  + ' ' + expressions[0];
-      case num % 10 < 5: return num  + ' ' + expressions[1];
-      default: return num  + ' ' + expressions[2];
-    }
-  };
-
 console.log(`Расходы за месяц: ${appData.expensesMonth}`);
-
 console.log( `${appData.period > 0 &&  appData.period !== Infinity ?
   `Цель будет достигнута за: ${getDeclensionOfStringByNumber(appData.period, ['месяц', 'месяца', 'месяцев'])}` :
   'Цель не будет достигнута!'}`);
 console.log(appData.getStatusIncome(appData.budgetDay));
-
 console.log(`Наша программа включает в себя данные:`);
 for (let key in appData) {
   if (typeof appData[key] !== 'function') {
