@@ -3,6 +3,26 @@
 let money;
 // Проверка являются ли полученные данные числом
 const
+  calculateButton = document.getElementById('start'),
+  addNewIncomeButton = document.querySelector('.income').getElementsByTagName('button')[0], 
+  addNewExpensesButton = document.querySelector('.expenses').getElementsByTagName('button')[0],
+  depositCheck = document.querySelector('#deposit-check'),
+  additionalIncomeInputs = document.querySelectorAll('.additional_income-item'),
+  budgetMonthValue = document.getElementsByClassName('budget_month-value')[0],
+  budgetDayValue = document.getElementsByClassName('budget_day-value')[0],
+  expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0],
+  additionalIncomeValue  = document.getElementsByClassName('additional_income-value')[0],
+  additionalExpensesValue = document.getElementsByClassName('additional_expenses-value')[0],
+  incomePeriodValue = document.getElementsByClassName('income_period-value')[0],
+  targetMonthValue = document.getElementsByClassName('target_month-value')[0],
+  salaryAmountInput = document.querySelector('.salary-amount'),
+  incomeTitleInput = document.querySelector('input.income-title'),
+  incomeAmountInput = document.querySelector('.income-amount'),
+  expensesTitleInput = document.querySelector('input.expenses-title'),
+  expensesAmountInput = document.querySelector('.expenses-amount'),
+  additionalExpensesInput = document.querySelector('.additional_expenses-item'),
+  targetAmountInput = document.querySelector('.target-amount'),
+  periodSelectInput = document.querySelector('.period-select'),
   isNumber = function(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
   },
@@ -38,7 +58,7 @@ const
     percentDeposit: 0,
     moneyDeposit: 0,
     mission: 50000,
-    period: 12,
+    period: 10,
     budgetMonth: 0,
     expensesMonth: 0,
     budgetDay: 0,
@@ -153,3 +173,28 @@ for (let key in appData) {
   }
 }
 console.log('Возможные расходы:', appData.getAddExpenses());
+
+console.log(calculateButton);
+console.log(addNewIncomeButton);
+console.log(addNewExpensesButton);
+depositCheck.checked = appData.deposit;
+console.log(additionalIncomeInputs);
+budgetMonthValue.value = getDeclensionOfStringByNumber(appData.budgetMonth, ['рубль', 'рубля', 'рублей']);
+budgetDayValue.value = getDeclensionOfStringByNumber(appData.budgetDay, ['рубль', 'рубля', 'рублей']);
+expensesMonthValue.value = getDeclensionOfStringByNumber(appData.expensesMonth, ['рубль', 'рубля', 'рублей']);
+console.log(additionalIncomeValue);
+console.log(additionalExpensesValue);
+incomePeriodValue.value = getDeclensionOfStringByNumber(appData.calcSavedMoney(), ['рубль', 'рубля', 'рублей']);
+targetMonthValue.value = getDeclensionOfStringByNumber(appData.getTargetMonth(), ['месяц', 'месяца', 'месяцев']);
+salaryAmountInput.value = getDeclensionOfStringByNumber(appData.budget, ['рубль', 'рубля', 'рублей']);
+incomeTitleInput.value = Object.keys(appData.income)[0];
+incomeAmountInput.value = getDeclensionOfStringByNumber(appData.income[incomeTitleInput.value],
+  ['рубль', 'рубля', 'рублей']);
+expensesTitleInput.value = Object.keys(appData.expenses)[0];
+expensesAmountInput.value = getDeclensionOfStringByNumber(appData.expenses[expensesTitleInput.value],
+  ['рубль', 'рубля', 'рублей']);
+additionalExpensesInput.value = appData.getAddExpenses();
+targetAmountInput.value = getDeclensionOfStringByNumber(appData.mission, ['рубль', 'рубля', 'рублей']);
+periodSelectInput.value = appData.period;
+
+
