@@ -196,5 +196,3 @@ expensesAmountInput.value = getDeclensionOfStringByNumber(appData.expenses[expen
 additionalExpensesInput.value = appData.getAddExpenses();
 targetAmountInput.value = getDeclensionOfStringByNumber(appData.mission, ['рубль', 'рубля', 'рублей']);
 periodSelectInput.value = appData.period;
-
-
