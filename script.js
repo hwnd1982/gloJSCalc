@@ -22,6 +22,8 @@ const
   additionalExpensesItem = document.querySelector('.additional_expenses-item'),
   targetAmount = document.querySelector('.target-amount'),
   periodSelect = document.querySelector('.period-select'),
+  sumInputItems = document.querySelectorAll('input[placeholder="Сумма"]'),
+  titleInputItems = document.querySelectorAll('input[placeholder="Наименование"]'),
   isNumber = function(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
   },
@@ -63,24 +65,49 @@ const
       appData.getBudget();
       appData.showResult();
     },
+    cyrillicInput: function(event) {
+      if (!event.key.match(/[?!,.а-яА-ЯёЁ\s]/) && event.key !== 'Backspace' && event.key !== 'Tab') {
+        event.preventDefault();
+      }
+    },
+    numericInput: function(event) {
+      if (!event.key.match(/[\d]/) && event.key !== 'Backspace' && event.key !== 'Tab') {
+        event.preventDefault();
+      }
+    },
     checkSalaryAmount: function() {
-      if (isNumber(salaryAmount.value)) {
+      if (salaryAmount.value !== '') {
         start.removeAttribute("disabled");
         start.addEventListener('click', appData.start);
       } else {
-        salaryAmount.value = salaryAmount.value.slice(0, -1);
-        alert('Ошибка, корректно заполните поле "Месячный доход"!');
+        alert('Ошибка, поле "Месячный доход" должно быть заполнено!');
       }
     },
     addExpensesBlock: function() {
-      expensesItems[0].parentNode.insertBefore(expensesItems[0].cloneNode(true), addExpensesBlockButton);
+      let cloneExpensesItem = expensesItems[0].cloneNode(true),
+        cloneExpensesTitle = cloneExpensesItem.querySelector('.expenses-title'),
+        cloneExpensesAmount = cloneExpensesItem.querySelector('.expenses-amount');
+      
+      cloneExpensesTitle.value = '';
+      cloneExpensesAmount.value = '';
+      cloneExpensesTitle.addEventListener('keydown', appData.cyrillicInput);
+      cloneExpensesAmount.addEventListener('keydown', appData.numericInput);
+      expensesItems[0].parentNode.insertBefore(cloneExpensesItem, addExpensesBlockButton);
       expensesItems = document.querySelectorAll('.expenses-items');
       if (expensesItems.length === 3) {
         addExpensesBlockButton.style.display = 'none';
       }
     },
     addIncomeBlock: function() {
-      incomeItems[0].parentNode.insertBefore(incomeItems[0].cloneNode(true), addIncomeBlockButton);
+      let cloneIncomeItem = incomeItems[0].cloneNode(true),
+        cloneIncomeTitle = cloneIncomeItem.querySelector('.income-title'),
+        cloneIncomAmount = cloneIncomeItem.querySelector('.income-amount');
+      
+      cloneIncomeTitle.value = '';
+      cloneIncomAmount.value = '';
+      cloneIncomeTitle.addEventListener('keydown', appData.cyrillicInput);
+      cloneIncomAmount.addEventListener('keydown', appData.numericInput);
+      incomeItems[0].parentNode.insertBefore(cloneIncomeItem, addIncomeBlockButton);
       incomeItems = document.querySelectorAll('.income-items');
       if (incomeItems.length === 3) {
         addIncomeBlockButton.style.display = 'none';
@@ -118,7 +145,8 @@ const
       additionalExpensesValue.value = appData.addExpenses.join(', ');
       additionalIncomeValue.value = appData.addIncome.join(', ');
       targetMonthValue.value = appData.getTargetMonth();
-      
+      incomePeriodValue.value = appData.calcSavedMoney();
+
       periodSelect.addEventListener('input', appData.showResult);
     },
     getAddExpenses: function() {
@@ -141,11 +169,13 @@ const
       });
     },
     getExpensesMonth: function() {
+      appData.expensesMonth = 0;
       for (let key in appData.expenses) {
         appData.expensesMonth += +appData.expenses[key];
       }
     },
     getIncomeMonth: function() {
+      appData.incomeMonth = 0;
       for (let key in appData.income) {
         appData.incomeMonth += +appData.income[key];
       }
@@ -190,3 +220,9 @@ salaryAmount.addEventListener('input', appData.checkSalaryAmount);
 addExpensesBlockButton.addEventListener('click', appData.addExpensesBlock);
 addIncomeBlockButton.addEventListener('click', appData.addIncomeBlock);
 periodSelect.addEventListener('input', appData.changePeriod);
+titleInputItems.forEach(function(item) {
+  item.addEventListener('keydown', appData.cyrillicInput);
+});
+sumInputItems.forEach(function(item) {
+  item.addEventListener('keydown', appData.numericInput);
+});
