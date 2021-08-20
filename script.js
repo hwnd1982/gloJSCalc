@@ -65,10 +65,10 @@ const
     },
     checkSalaryAmount: function() {
       if (isNumber(salaryAmount.value)) {
-        console.log('!!!');
         start.removeAttribute("disabled");
         start.addEventListener('click', appData.start);
       } else {
+        salaryAmount.value = salaryAmount.value.slice(0, -1);
         alert('Ошибка, корректно заполните поле "Месячный доход"!');
       }
     },
@@ -186,7 +186,7 @@ const
   };
 
 start.setAttribute("disabled", true);
-salaryAmount.addEventListener('change', appData.checkSalaryAmount);
+salaryAmount.addEventListener('input', appData.checkSalaryAmount);
 addExpensesBlockButton.addEventListener('click', appData.addExpensesBlock);
 addIncomeBlockButton.addEventListener('click', appData.addIncomeBlock);
 periodSelect.addEventListener('input', appData.changePeriod);
