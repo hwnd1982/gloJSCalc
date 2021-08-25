@@ -116,13 +116,17 @@ const
       document.querySelector('.data').querySelectorAll('input[type=text]').forEach(function(item) {
         item.setAttribute('disabled', true);
       });
+      addExpensesBlockButton.style.display = 'none';
+      addIncomeBlockButton.style.display = 'none';
       start.style.display = 'none';
       cancel.style.display = 'block';
       this.resetListener = this.reset.bind(this);
       cancel.addEventListener('click', this.resetListener);
     },
     start: function() {
-      localStorage.appData = JSON.stringify(this);
+      if (!localStorage.appData) {
+        localStorage.appData = JSON.stringify(this);
+      }
       this.budget = +salaryAmount.value;
       this.getIncome();
       this.getExpenses();
@@ -197,7 +201,7 @@ const
           if (itemExpenses !== '' && cashExpenses !== '') {
             this.expenses[itemExpenses] = cashExpenses;
           }
-      }.bind(this));
+      }, this);
     },
     getIncome: function() {
       incomeItems.forEach(function(item) {
@@ -207,7 +211,7 @@ const
           if (itemIncome !== '' && cashIncome !== '') {
             this.income[itemIncome] = cashIncome;
           }
-      }.bind(this));
+      }, this);
     },
     showResult: function() {
       budgetMonthValue.value = this.budgetMonth;
@@ -226,7 +230,7 @@ const
         if (item !== '') {
           this.addExpenses.push(item);
         }
-      }.bind(this));
+      }, this);
     },
     getAddIncome: function() {
       additionalIncomeItems.forEach(function(item) {
@@ -235,7 +239,7 @@ const
         if (itemValue !== '') {
           this.addIncome.push(itemValue);
         }
-      }.bind(this));
+      }, this);
     },
     getExpensesMonth: function() {
       this.expensesMonth = 0;
@@ -291,10 +295,10 @@ const
       periodSelect.addEventListener('input', this.changePeriod);
       titleInputItems.forEach(function(item) {
         item.addEventListener('keydown', this.cyrillicInput);
-      }.bind(this));
+      }, this);
       sumInputItems.forEach(function(item) {
         item.addEventListener('keydown', this.numericInput);
-      }.bind(this));
+      }, this);
     }
   };
 
