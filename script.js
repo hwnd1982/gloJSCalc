@@ -139,23 +139,15 @@ class AppData {
   }
   cyrillicInput(event) {
     const position = this.selectionStart;
-
-    if (event.data) {
-      if (!event.data.match(/[а-яА-ЯёЁ\s]/)) {
-        event.target.value = event.target.value.replace(event.data, '');
-        this.selectionEnd = position - 1;
-      }
-    }
+    
+    this.value = this.value.replace(/[^а-яА-ЯёЁ\s]/g,'');
+    this.selectionEnd = event.data ? !event.data.match(/[а-яА-ЯёЁ\s]/) ? position - 1 : position : position;
   }
   numericInput(event) {
     const position = this.selectionStart;
 
-    if (event.data) {
-      if (!event.data.match(/[\d]/)) {
-        event.target.value = event.target.value.replace(event.data, '');
-        this.selectionEnd = position - 1;
-      }
-    }
+    this.value = this.value.replace(/[^\d]/g,'');
+    this.selectionEnd = event.data ? !event.data.match(/[\d]/) ? position - 1 : position : position;
   }
   checkSalaryAmount() {
     if (salaryAmount.value !== "") {
