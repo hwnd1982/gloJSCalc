@@ -138,13 +138,23 @@ class AppData {
     this.setStartSettings();
   }
   cyrillicInput(event) {
-    if (!event.key.match(/[?!,.а-яА-ЯёЁ\s]/) && event.key !== "Backspace" && event.key !== "Tab") {
-      event.preventDefault();
+    const position = this.selectionStart;
+
+    if (event.data) {
+      if (!event.data.match(/[а-яА-ЯёЁ\s]/)) {
+        event.target.value = event.target.value.replace(event.data, '');
+        this.selectionEnd = position - 1;
+      }
     }
   }
   numericInput(event) {
-    if (!event.key.match(/[\d]/) && event.key !== "Backspace" && event.key !== "Tab") {
-      event.preventDefault();
+    const position = this.selectionStart;
+
+    if (event.data) {
+      if (!event.data.match(/[\d]/)) {
+        event.target.value = event.target.value.replace(event.data, '');
+        this.selectionEnd = position - 1;
+      }
     }
   }
   checkSalaryAmount() {
@@ -166,8 +176,8 @@ class AppData {
 
     cloneExpensesTitle.value = "";
     cloneExpensesAmount.value = "";
-    cloneExpensesTitle.addEventListener("keydown", this.cyrillicInput);
-    cloneExpensesAmount.addEventListener("keydown", this.numericInput);
+    cloneExpensesTitle.addEventListener("input", this.cyrillicInput);
+    cloneExpensesAmount.addEventListener("input", this.numericInput);
     incExpItems[className][0].parentNode.insertBefore(cloneExpensesItem, addBlockButtons[className]);
     if (incExpItems[className].length === 3) {
       addBlockButtons[className].style.display = "none";
@@ -247,8 +257,8 @@ class AppData {
     addBlockButtons.income.addEventListener("click", this.addIncExpBlock.bind(this));
     addBlockButtons.expenses.addEventListener("click", this.addIncExpBlock.bind(this));
     periodSelect.addEventListener("input", this.changePeriod);
-    titleInputItems.forEach(item => item.addEventListener("keydown", this.cyrillicInput));
-    sumInputItems.forEach(item => item.addEventListener("keydown", this.numericInput));
+    titleInputItems.forEach(item => item.addEventListener("input", this.cyrillicInput));
+    sumInputItems.forEach(item => item.addEventListener("input", this.numericInput));
   }
 }
 
