@@ -3,8 +3,13 @@
 const 
   start = document.getElementById("start"),
   cancel = document.getElementById("cancel"),
-  incExpItems = {},
-  addBlockButtons = {},
+  incExpItems = {
+    income: document.getElementsByClassName("income-items"),
+    expenses: document.getElementsByClassName("expenses-items")},
+  addBlockButtons = {
+    income: document.querySelector(".income").getElementsByTagName("button")[0],
+    expenses: document.querySelector(".expenses").getElementsByTagName("button")[0]
+  },
   depositCheck = document.querySelector("#deposit-check"),
   additionalIncomeItems = document.querySelectorAll(".additional_income-item"),
   budgetMonthValue = document.getElementsByClassName("budget_month-value")[0],
@@ -239,11 +244,7 @@ class AppData {
     cancel.addEventListener("click", this.reset.bind(this));
     periodSelect.setAttribute("disabled", true);
     salaryAmount.addEventListener("input", this.checkSalaryAmount.bind(this));
-    incExpItems.income = document.getElementsByClassName("income-items");
-    incExpItems.expenses = document.getElementsByClassName("expenses-items");
-    addBlockButtons.income = document.querySelector(".income").getElementsByTagName("button")[0];
     addBlockButtons.income.addEventListener("click", this.addIncExpBlock.bind(this));
-    addBlockButtons.expenses = document.querySelector(".expenses").getElementsByTagName("button")[0];
     addBlockButtons.expenses.addEventListener("click", this.addIncExpBlock.bind(this));
     periodSelect.addEventListener("input", this.changePeriod);
     titleInputItems.forEach(item => item.addEventListener("keydown", this.cyrillicInput));
