@@ -49,14 +49,33 @@ class AppData {
 
     if (this.checkState()) {
       localStorage.appData = JSON.stringify(this);
-      // Загрузить
+      
       for (let key in this) {
         this[key] = JSON.parse(localStorage[key]);
       }
+
+      salaryAmount.value = this.budget;
+      additionalIncomeItems.forEach((item, index) => 
+        item.value = this.addIncome[index] ? this.addIncome[index] : '');
+      additionalExpensesItem.value = this.addExpenses.join(', ');
+      ['income', 'expenses'].forEach(className => {
+        let index = 0;
+        for ( let key in this[className]) {
+          if(!incExpItems[className][index]) {
+            this.cloneItem(className);
+          }
+          incExpItems[className][index].querySelector(`.${className}-title`).value = key;
+          incExpItems[className][index].querySelector(`.${className}-amount`).value = this[className][key];
+
+          index++;
+        }
+      });
+
+      targetAmount.value = JSON.parse(localStorage.targetAmount);
+      periodSelect.value = JSON.parse(localStorage.periodSelect);
+      this.changePeriod.call(periodSelect);
       this.showResult();
       if (this.deposit) {
-        
-        console.log(this.deposit);
         depositCheck.setAttribute('checked', true);
         this.depositHandler();
         depositBank.value = JSON.parse(localStorage.depositBank);
@@ -66,7 +85,7 @@ class AppData {
       }
       this.setStartSettings();
     } else {
-      // Очистить
+      
       localStorage.clear();
       localStorage.appData = JSON.stringify(this);
     }
@@ -102,10 +121,13 @@ class AppData {
   }
   resetProperties() {
     const appData = JSON.parse(localStorage.appData);
-
+    
     for (let key in appData) {
       this[key] = appData[key];
     }
+
+    localStorage.clear();
+    localStorage.appData = JSON.stringify(this);
   }
   resetDataInputs() {
     document
@@ -201,13 +223,11 @@ class AppData {
         obj[item.split('=')[0]] = item.split('=')[1];
         return obj;
       })) : '';
-
-    if (cookieState.isLoad) {
+    if (cookieState.isLoad && (localStorage.length >= 16)) {
       for (let key in localStorage) {
         if (!localStorage.hasOwnProperty(key) || key === 'appData') {
           continue;
         }
-        console.log(cookieState[key], localStorage[key]);
         if (cookieState[key] !== localStorage[key]) {
           return false;
         }
@@ -272,21 +292,23 @@ class AppData {
       alert('Ошибка: введите корректное значение в поле проценты!');
     }
   }
-  addIncExpBlock(event) {
+  cloneItem(className) {
     const 
-      className = event.target.parentNode.className,
-      cloneExpensesItem = incExpItems[className][0].cloneNode(true),
-      cloneExpensesTitle = cloneExpensesItem.querySelector(`.${className}-title`),
-      cloneExpensesAmount = cloneExpensesItem.querySelector(`.${className}-amount`);
+      cloneItem = incExpItems[className][0].cloneNode(true),
+      cloneTitle = cloneItem.querySelector(`.${className}-title`),
+      cloneAmount = cloneItem.querySelector(`.${className}-amount`);
 
-    cloneExpensesTitle.value = "";
-    cloneExpensesAmount.value = "";
-    cloneExpensesTitle.addEventListener("input", this.cyrillicInput);
-    cloneExpensesAmount.addEventListener("input", this.numericInput);
-    incExpItems[className][0].parentNode.insertBefore(cloneExpensesItem, addBlockButtons[className]);
+    cloneTitle.value = "";
+    cloneAmount.value = "";
+    cloneTitle.addEventListener("input", this.cyrillicInput);
+    cloneAmount.addEventListener("input", this.numericInput);
+    incExpItems[className][0].parentNode.insertBefore(cloneItem, addBlockButtons[className]);
     if (incExpItems[className].length === 3) {
       addBlockButtons[className].style.display = "none";
     }
+  }
+  addIncExpBlock(event) {
+    this.cloneItem(event.target.parentNode.className);
   }
   changePeriod() {
     document.querySelector(".period-amount").textContent = periodSelect.value;
