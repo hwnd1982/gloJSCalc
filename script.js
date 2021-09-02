@@ -46,58 +46,23 @@ class AppData {
     this.expensesMonth = 0;
     this.budgetDay = 0;
     
-
     if (this.checkState()) {
-      localStorage.appData = JSON.stringify(this);
-      
-      for (let key in this) {
-        this[key] = JSON.parse(localStorage[key]);
-      }
-
+      localStorage.appData = JSON.stringify(this);  
+      this.loadData();
       salaryAmount.value = this.budget;
-      additionalIncomeItems.forEach((item, index) => 
-        item.value = this.addIncome[index] ? this.addIncome[index] : '');
-      additionalExpensesItem.value = this.addExpenses.join(', ');
-      ['income', 'expenses'].forEach(className => {
-        let index = 0;
-        for ( let key in this[className]) {
-          if(!incExpItems[className][index]) {
-            this.cloneItem(className);
-          }
-          incExpItems[className][index].querySelector(`.${className}-title`).value = key;
-          incExpItems[className][index].querySelector(`.${className}-amount`).value = this[className][key];
-
-          index++;
-        }
-      });
-
-      targetAmount.value = JSON.parse(localStorage.targetAmount);
+      this.loadIncExp();
+      this.loadAddIncExp();
+      this.loadInfoDeposit();
       periodSelect.value = JSON.parse(localStorage.periodSelect);
+      targetAmount.value = JSON.parse(localStorage.targetAmount);
       this.changePeriod.call(periodSelect);
       this.showResult();
-      if (this.deposit) {
-        depositCheck.setAttribute('checked', true);
-        this.depositHandler();
-        depositBank.value = JSON.parse(localStorage.depositBank);
-        this.changePercent.call(depositBank);
-        depositPercent.value = JSON.parse(localStorage.percentDeposit);
-        depositAmount.value = JSON.parse(localStorage.moneyDeposit);
-      }
       this.setStartSettings();
     } else {
-      
       localStorage.clear();
       localStorage.appData = JSON.stringify(this);
     }
-    
     this.eventsListeners();
-  }
-  setCookie(name, value, year, month, day, path, domain, secure) {
-    document.cookie = `${name}=${value}; ${
-      year ? 'expires=' + new Date(year, month, day).toGMTString() : ''}${
-      path ? '; path' + path : ''}${
-      domain ? '; domain' + domain : ''}${
-      secure ? '; secure' + secure : ''}`;
   }
   isNumber(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
@@ -117,6 +82,46 @@ class AppData {
         return num + " " + expressions[1];
       default:
         return num + " " + expressions[2];
+    }
+  }
+  setCookie(name, value, year, month, day, path, domain, secure) {
+    document.cookie = `${name}=${value}; ${
+      year ? 'expires=' + new Date(year, month, day).toGMTString() : ''}${
+      path ? '; path' + path : ''}${
+      domain ? '; domain' + domain : ''}${
+      secure ? '; secure' + secure : ''}`;
+  }
+  loadData() {
+    for (let key in this) {
+        this[key] = JSON.parse(localStorage[key]);
+    }
+  }
+  loadIncExp() {
+    ['income', 'expenses'].forEach(className => {
+      let index = 0;
+      for ( let key in this[className]) {
+        if(!incExpItems[className][index]) {
+          this.cloneItem(className);
+        }
+        incExpItems[className][index].querySelector(`.${className}-title`).value = key;
+        incExpItems[className][index].querySelector(`.${className}-amount`).value = this[className][key];
+        index++;
+        }
+    });
+  }
+  loadAddIncExp() {
+    additionalIncomeItems.forEach((item, index) => 
+      item.value = this.addIncome[index] ? this.addIncome[index] : '');
+    additionalExpensesItem.value = this.addExpenses.join(', ');
+  }
+  loadInfoDeposit() {
+    if (this.deposit) {
+      depositCheck.setAttribute('checked', true);
+      this.depositHandler();
+      depositBank.value = JSON.parse(localStorage.depositBank);
+      this.changePercent.call(depositBank);
+      depositPercent.value = JSON.parse(localStorage.percentDeposit);
+      depositAmount.value = JSON.parse(localStorage.moneyDeposit);
     }
   }
   resetProperties() {
@@ -206,7 +211,7 @@ class AppData {
         localStorage[key] = JSON.stringify(this[key]);
       }
     }
-    
+
     this.setCookie('depositBank', JSON.stringify(depositBank.value ), year, month, day);
     localStorage.depositBank = JSON.stringify(depositBank.value );
     this.setCookie('periodSelect', JSON.stringify(periodSelect.value ), year, month, day);
@@ -235,13 +240,6 @@ class AppData {
       return true;
     } else {
       return false;
-    }
-  }
-  loadState() {
-    const appData = JSON.parse(localStorage.appData);
-
-    for (let key in appData) {
-      this[key] = appData[key];
     }
   }
   start() {
