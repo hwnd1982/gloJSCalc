@@ -106,7 +106,7 @@ class AppData {
         incExpItems[className][index].querySelector(`.${className}-title`).value = key;
         incExpItems[className][index].querySelector(`.${className}-amount`).value = this[className][key];
         index++;
-        }
+      }
     });
   }
   loadAddIncExp() {
