@@ -1,11 +1,11 @@
-"use strict";
 
-const 
+
+const
   start = document.getElementById("start"),
   cancel = document.getElementById("cancel"),
   incExpItems = {
     income: document.getElementsByClassName("income-items"),
-    expenses: document.getElementsByClassName("expenses-items")},
+    expenses: document.getElementsByClassName("expenses-items") },
   addBlockButtons = {
     income: document.querySelector(".income").getElementsByTagName("button")[0],
     expenses: document.querySelector(".expenses").getElementsByTagName("button")[0]
@@ -20,8 +20,6 @@ const
   incomePeriodValue = document.getElementsByClassName("income_period-value")[0],
   targetMonthValue = document.getElementsByClassName("target_month-value")[0],
   salaryAmount = document.querySelector(".salary-amount"),
-  incomeTitle = document.querySelector("input.income-title"),
-  expensesTitle = document.querySelector("input.expenses-title"),
   additionalExpensesItem = document.querySelector(".additional_expenses-item"),
   targetAmount = document.querySelector(".target-amount"),
   periodSelect = document.querySelector(".period-select"),
@@ -45,9 +43,9 @@ class AppData {
     this.budgetMonth = 0;
     this.expensesMonth = 0;
     this.budgetDay = 0;
-    
+
     if (this.checkState()) {
-      localStorage.appData = JSON.stringify(this);  
+      localStorage.appData = JSON.stringify(this);
       this.loadData();
       salaryAmount.value = this.budget;
       this.loadIncExp();
@@ -72,16 +70,16 @@ class AppData {
   }
   getDeclensionOfStringByNumber(num, expressions) {
     switch (true) {
-      case +(num += "").substr(-2) > 10 && +(num += "").substr(-2) <= 20:
-        return num + " " + expressions[2];
-      case num % 10 === 0:
-        return num + " " + expressions[2];
-      case num % 10 === 1:
-        return num + " " + expressions[0];
-      case num % 10 < 5:
-        return num + " " + expressions[1];
-      default:
-        return num + " " + expressions[2];
+    case +(num += "").substr(-2) > 10 && +(num += "").substr(-2) <= 20:
+      return num + " " + expressions[2];
+    case num % 10 === 0:
+      return num + " " + expressions[2];
+    case num % 10 === 1:
+      return num + " " + expressions[0];
+    case num % 10 < 5:
+      return num + " " + expressions[1];
+    default:
+      return num + " " + expressions[2];
     }
   }
   setCookie(name, value, year, month, day, path, domain, secure) {
@@ -92,15 +90,15 @@ class AppData {
       secure ? '; secure' + secure : ''}`;
   }
   loadData() {
-    for (let key in this) {
-        this[key] = JSON.parse(localStorage[key]);
+    for (const key in this) {
+      this[key] = JSON.parse(localStorage[key]);
     }
   }
   loadIncExp() {
     ['income', 'expenses'].forEach(className => {
       let index = 0;
-      for ( let key in this[className]) {
-        if(!incExpItems[className][index]) {
+      for (const key in this[className]) {
+        if (!incExpItems[className][index]) {
           this.cloneItem(className);
         }
         incExpItems[className][index].querySelector(`.${className}-title`).value = key;
@@ -110,7 +108,7 @@ class AppData {
     });
   }
   loadAddIncExp() {
-    additionalIncomeItems.forEach((item, index) => 
+    additionalIncomeItems.forEach((item, index) =>
       item.value = this.addIncome[index] ? this.addIncome[index] : '');
     additionalExpensesItem.value = this.addExpenses.join(', ');
   }
@@ -126,8 +124,8 @@ class AppData {
   }
   resetProperties() {
     const appData = JSON.parse(localStorage.appData);
-    
-    for (let key in appData) {
+
+    for (const key in appData) {
       this[key] = appData[key];
     }
 
@@ -205,23 +203,23 @@ class AppData {
       month = today.getMonth(),
       day = today.getDay();
 
-    for (let key in this) {
+    for (const key in this) {
       if (key !== 'periodSelectListener') {
         this.setCookie(key, JSON.stringify(this[key]), year, month, day);
         localStorage[key] = JSON.stringify(this[key]);
       }
     }
 
-    this.setCookie('depositBank', JSON.stringify(depositBank.value ), year, month, day);
-    localStorage.depositBank = JSON.stringify(depositBank.value );
-    this.setCookie('periodSelect', JSON.stringify(periodSelect.value ), year, month, day);
-    localStorage.periodSelect = JSON.stringify(periodSelect.value );
-    this.setCookie('targetAmount', JSON.stringify(targetAmount.value ), year, month, day);
-    localStorage.targetAmount = JSON.stringify(targetAmount.value );
+    this.setCookie('depositBank', JSON.stringify(depositBank.value), year, month, day);
+    localStorage.depositBank = JSON.stringify(depositBank.value);
+    this.setCookie('periodSelect', JSON.stringify(periodSelect.value), year, month, day);
+    localStorage.periodSelect = JSON.stringify(periodSelect.value);
+    this.setCookie('targetAmount', JSON.stringify(targetAmount.value), year, month, day);
+    localStorage.targetAmount = JSON.stringify(targetAmount.value);
     this.setCookie('isLoad', JSON.stringify(true), year, month, day);
   }
   checkState() {
-    const 
+    const
       cookieState =  document.cookie ? Object.assign(...document.cookie.split('; ').map(item => {
         const obj = {};
 
@@ -229,7 +227,7 @@ class AppData {
         return obj;
       })) : '';
     if (cookieState.isLoad && (localStorage.length >= 16)) {
-      for (let key in localStorage) {
+      for (const key in localStorage) {
         if (!localStorage.hasOwnProperty(key) || key === 'appData') {
           continue;
         }
@@ -259,19 +257,19 @@ class AppData {
   }
   cyrillicInput(event) {
     const position = this.selectionStart;
-    
-    this.value = this.value.replace(/[^а-яА-ЯёЁ\s]/g,'');
+
+    this.value = this.value.replace(/[^а-яА-ЯёЁ\s]/g, '');
     this.selectionEnd = event.data ? !event.data.match(/[а-яА-ЯёЁ\s]/) ? position - 1 : position : position;
   }
   numericInput(event) {
     const position = this.selectionStart;
 
-    this.value = this.value.replace(/[^\d]/g,'');
+    this.value = this.value.replace(/[^\d]/g, '');
     this.selectionEnd = event.data ? !event.data.match(/[\d]/) ? position - 1 : position : position;
   }
   checkSalaryAmountValue() {
     if (salaryAmount.value !== "") {
-      if (start.getAttribute("disabled") && (!this.deposit || depositPercent.value !== '') ) {
+      if (start.getAttribute("disabled") && (!this.deposit || depositPercent.value !== '')) {
         start.removeAttribute("disabled");
       }
     } else {
@@ -284,14 +282,14 @@ class AppData {
         start.removeAttribute("disabled");
       }
     } else {
-      depositPercent.value = depositPercent.value ? 
-        +depositPercent.value > 100 ?  
+      depositPercent.value = depositPercent.value ?
+        +depositPercent.value > 100 ?
           depositPercent.value.slice(0, 2) : 0 : '';
       alert('Ошибка: введите корректное значение в поле проценты!');
     }
   }
   cloneItem(className) {
-    const 
+    const
       cloneItem = incExpItems[className][0].cloneNode(true),
       cloneTitle = cloneItem.querySelector(`.${className}-title`),
       cloneAmount = cloneItem.querySelector(`.${className}-amount`);
@@ -312,16 +310,16 @@ class AppData {
     document.querySelector(".period-amount").textContent = periodSelect.value;
   }
   getAddIncExp() {
-    ['income', 'expenses'].forEach(className => 
+    ['income', 'expenses'].forEach(className =>
       Array.from(incExpItems[className]).forEach(item => {
-        const 
+        const
           itemTitle = item.querySelector(`.${className}-title`).value,
           itemAmount = item.querySelector(`.${className}-amount`).value;
 
         if (itemTitle !== "" && itemAmount !== "") {
           this[className][itemTitle] = itemAmount;
         }
-    }));
+      }));
   }
   showResult() {
     budgetMonthValue.value = this.budgetMonth;
@@ -353,13 +351,13 @@ class AppData {
   }
   getExpensesMonth() {
     this.expensesMonth = 0;
-    for (let key in this.expenses) {
+    for (const key in this.expenses) {
       this.expensesMonth += +this.expenses[key];
     }
   }
   getIncomeMonth() {
     this.incomeMonth = 0;
-    for (let key in this.income) {
+    for (const key in this.income) {
       this.incomeMonth += +this.income[key];
     }
   }
@@ -395,7 +393,7 @@ class AppData {
       }
     }
   }
-  depositHandler(event) {
+  depositHandler() {
     if (depositCheck.checked) {
       depositBank.style.display = 'inline-block';
       depositAmount.style.display = 'inline-block';
@@ -430,4 +428,4 @@ class AppData {
   }
 }
 
-const appData = new AppData();
+new AppData();
