@@ -228,7 +228,7 @@ class AppData {
       })) : '';
     if (cookieState.isLoad && (localStorage.length >= 16)) {
       for (const key in localStorage) {
-        if (!localStorage.hasOwnProperty(key) || key === 'appData') {
+        if (!Object.prototype.hasOwnProperty.call(localStorage, key) || key === 'appData') {
           continue;
         }
         if (cookieState[key] !== localStorage[key]) {
